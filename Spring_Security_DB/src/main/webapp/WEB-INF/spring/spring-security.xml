@@ -1,0 +1,68 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
+
+<!-- 
+<listener>
+    <listener-class>
+      org.springframework.security.web.session.HttpSessionEventPublisher
+    </listener-class>
+  </listener>
+ -->
+
+	<!--URL 패턴 통제  -->
+	<!--auto-config form-login,login이 자동 추가 
+	<form-login /> j_spring_security_check
+	<logiout /> /jspring_security_logout
+	<http-basic /> :	브라우저 아디이 패스워드 입력 받는
+	 -->
+	<http auto-config="true" access-denied-page="/alert">
+		<intercept-url pattern="/welcome*" access="ROLE_USER" />
+		<intercept-url pattern="/role*" access="ROLE_USER" />
+		
+		<!--아무나 접근하도록  filters='none'
+		3.0 에서 security="none" 으로 변경
+		-->
+		<intercept-url pattern="/home" filters='none'/>
+		<!--인증은 하지만 통제는 안하는  -->
+		<intercept-url pattern="/home1" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<form-login login-page="/login" default-target-url="/welcome"
+			authentication-failure-url="/loginfailed" />
+	 
+		<logout logout-success-url="/logout" />
+		<session-management>
+		    <concurrency-control 
+		    expired-url="http://www.naver.com"
+	        error-if-maximum-exceeded="true"
+	        max-sessions="1" />
+	    </session-management>
+	</http>
+
+
+	<!--로그인 인증  -->
+	<!--3.0에서   authentication-manager 감싸기 추가-->
+	<!--기본 스키마 변경  -->
+	<authentication-manager>
+		<authentication-provider>
+			<!--password-encoder 로 암호화 검증  -->
+			<password-encoder hash="md5"/>
+			<jdbc-user-service data-source-ref="dataSource"
+				
+				users-by-username-query="
+					select username,password, enabled 
+					from users where USERNAME=?" 
+				
+				authorities-by-username-query="
+					select u.username, ur.authority from users u, user_roles ur 
+					where u.user_id = ur.user_id and u.username =?  " 
+					
+			/>
+		</authentication-provider>
+	</authentication-manager>
+  
+  
+  
+</beans:beans>
