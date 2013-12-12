@@ -5,7 +5,8 @@ Spirng-Security
 완
 <ol>
 <li>DB 로그인</li>
-<li></li>
+<li>로그인 페이지 커스터 마이징</li>
+<li>스키마 커스터 마이징</li>
 </ol>
 
 
