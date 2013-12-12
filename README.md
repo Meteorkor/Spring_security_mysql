@@ -15,5 +15,6 @@ Spirng-Security
 미완
 <ol>
 <li>DB 권한(URL)</li>
+<li>메소드 권한</li>
 <li></li>
 </ol>
